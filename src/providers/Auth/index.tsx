@@ -5,6 +5,7 @@ import {
   ReactNode,
   Dispatch,
 } from "react";
+import { useHistory } from "react-router-dom";
 import api from "../../services/api";
 
 interface IAuthProviderProps {
@@ -19,7 +20,7 @@ interface IUserData {
 interface IAuthProviderData {
   token: string;
   setAuth: Dispatch<string>;
-  signIn(userData: IUserData, setError: Dispatch<boolean>, history: any): void;
+  signIn: (userData: IUserData, setError: Dispatch<boolean>) => void;
 }
 
 const AuthContext = createContext<IAuthProviderData>({} as IAuthProviderData);
@@ -28,12 +29,9 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
   const token = localStorage.getItem("token") || "";
 
   const [auth, setAuth] = useState<string>(token);
+  const history = useHistory();
 
-  const signIn = (
-    userData: IUserData,
-    setError: Dispatch<boolean>,
-    history: any
-  ) => {
+  const signIn = (userData: IUserData, setError: Dispatch<boolean>) => {
     api
       .post("/sessions/", userData)
       .then((response) => {
