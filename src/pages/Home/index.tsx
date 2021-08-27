@@ -38,7 +38,7 @@ const Home = () => {
               </figure>
               <strong>{product.name}</strong>
               <div>
-                <span>{product.price}</span>
+                <span>R$ {product.price}</span>
 
                 <button type="button" onClick={() => addCart(product)}>
                   <span>Adicionar ao carrinho</span>
