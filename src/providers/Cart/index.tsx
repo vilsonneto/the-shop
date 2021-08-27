@@ -10,7 +10,7 @@ interface IItem {
   name: string;
   image_url: string;
   price: number;
-  description: string;
+  description?: string;
   id: number;
 }
 
@@ -28,16 +28,21 @@ const CartContext = createContext<ICartProviderData>({} as ICartProviderData);
 export const CartProvider = ({ children }: ICartProviderProps) => {
   const [cart, setCart] = useState<IItem[]>([]);
 
+  console.log(cart);
+
   useEffect(() => {
     const myCart = localStorage.getItem("cart");
     if (myCart !== null) {
       setCart(JSON.parse(myCart));
+    } else {
+      localStorage.setItem("cart", JSON.stringify(cart));
     }
-    localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const addCart = (product: IItem) => {
     const newCart = [...cart, product];
+    localStorage.setItem("cart", JSON.stringify(newCart));
     setCart(newCart);
   };
 
