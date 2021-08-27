@@ -20,13 +20,13 @@ interface ICartProviderProps {
 
 interface ICartProviderData {
   cart: IItem[];
-  setCart: React.Dispatch<React.SetStateAction<[]>>;
+  addCart: (product: IItem) => void;
 }
 
 const CartContext = createContext<ICartProviderData>({} as ICartProviderData);
 
 export const CartProvider = ({ children }: ICartProviderProps) => {
-  const [cart, setCart] = useState<[]>([]);
+  const [cart, setCart] = useState<IItem[]>([]);
 
   useEffect(() => {
     const myCart = localStorage.getItem("cart");
@@ -36,8 +36,13 @@ export const CartProvider = ({ children }: ICartProviderProps) => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
+  const addCart = (product: IItem) => {
+    const newCart = [...cart, product];
+    setCart(newCart);
+  };
+
   return (
-    <CartContext.Provider value={{ cart, setCart }}>
+    <CartContext.Provider value={{ cart, addCart }}>
       {children}
     </CartContext.Provider>
   );
