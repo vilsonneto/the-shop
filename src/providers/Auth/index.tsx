@@ -12,15 +12,22 @@ interface IAuthProviderProps {
   children: ReactNode;
 }
 
-interface IUserData {
+interface ISignInData {
+  email: string;
+  password: string;
+}
+
+interface ISignUpData {
   username: string;
   password: string;
+  email: string;
 }
 
 interface IAuthProviderData {
   token: string;
   setAuth: Dispatch<string>;
-  signIn: (userData: IUserData, setError: Dispatch<boolean>) => void;
+  signIn: (userData: ISignInData, setError: Dispatch<boolean>) => void;
+  signUp: (userData: ISignUpData, setError: Dispatch<boolean>) => void;
 }
 
 const AuthContext = createContext<IAuthProviderData>({} as IAuthProviderData);
@@ -31,19 +38,30 @@ export const AuthProvider = ({ children }: IAuthProviderProps) => {
   const [auth, setAuth] = useState<string>(token);
   const history = useHistory();
 
-  const signIn = (userData: IUserData, setError: Dispatch<boolean>) => {
+  const signIn = (userData: ISignInData, setError: Dispatch<boolean>) => {
     api
-      .post("/sessions/", userData)
+      .post("/login/", userData)
       .then((response) => {
-        localStorage.setItem("token", response.data.access);
-        setAuth(response.data.access);
+        localStorage.setItem("token", response.data.accessToken);
+        setAuth(response.data.accessToken);
+        history.push("/dashboard");
+      })
+      .catch((err) => setError(true));
+  };
+
+  const signUp = (userData: ISignUpData, setError: Dispatch<boolean>) => {
+    api
+      .post("/register", userData)
+      .then((response) => {
+        localStorage.setItem("token", response.data.accessToken);
+        setAuth(response.data.accessToken);
         history.push("/dashboard");
       })
       .catch((err) => setError(true));
   };
 
   return (
-    <AuthContext.Provider value={{ token: auth, setAuth, signIn }}>
+    <AuthContext.Provider value={{ token: auth, setAuth, signUp, signIn }}>
       {children}
     </AuthContext.Provider>
   );

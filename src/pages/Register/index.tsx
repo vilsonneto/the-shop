@@ -9,16 +9,18 @@ import { Container } from "./styles";
 import { Link } from "react-router-dom";
 
 interface IDataSubmit {
+  username: string;
   email: string;
   password: string;
 }
 
-const Login = () => {
-  const { signIn } = useAuth();
+const Register = () => {
+  const { signUp } = useAuth();
 
   const [error, setError] = useState(false);
 
   const schema = yup.object().shape({
+    username: yup.string().required("Campo obrigatório"),
     email: yup
       .string()
       .required("Campo obrigatório")
@@ -27,10 +29,16 @@ const Login = () => {
         /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
         "Email invalido."
       ),
+    confirmEmail: yup
+      .string()
+      .oneOf([yup.ref("email"), null], "Email não está igual."),
     password: yup
       .string()
       .min(6, "Mínimo de 6 dígitos")
       .required("Campo obrigatório"),
+    confirmPassword: yup
+      .string()
+      .oneOf([yup.ref("password"), null], "Passwords não está igual"),
   });
 
   const {
@@ -42,18 +50,35 @@ const Login = () => {
   });
 
   const onSubmit = (data: IDataSubmit) => {
-    signIn(data, setError);
+    const { username, email, password } = data;
+
+    const newData = { username, password, email };
+
+    signUp(newData, setError);
   };
 
   return (
     <Container>
-      <h2>Login</h2>
+      <h2>Cadastro</h2>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
           <TextField
             margin="normal"
             variant="outlined"
-            label="Email"
+            label="Nome de usuário"
+            size="small"
+            color="primary"
+            {...register("username")}
+            error={!!errors.username}
+            helperText={errors.username?.message}
+          ></TextField>
+        </div>
+
+        <div>
+          <TextField
+            margin="normal"
+            variant="outlined"
+            label="Seu melhor email"
             size="small"
             color="primary"
             {...register("email")}
@@ -66,7 +91,20 @@ const Login = () => {
           <TextField
             margin="normal"
             variant="outlined"
-            label="Nome de usuário"
+            label="Confirmar email"
+            size="small"
+            color="primary"
+            {...register("confirmEmail")}
+            error={!!errors.confirmEmail}
+            helperText={errors.confirmEmail?.message}
+          ></TextField>
+        </div>
+
+        <div>
+          <TextField
+            margin="normal"
+            variant="outlined"
+            label="Senha"
             size="small"
             color="primary"
             type="password"
@@ -76,14 +114,28 @@ const Login = () => {
           ></TextField>
         </div>
 
+        <div>
+          <TextField
+            margin="normal"
+            variant="outlined"
+            label="Confirmar senha"
+            size="small"
+            color="primary"
+            type="password"
+            {...register("confirmPassword")}
+            error={!!errors.confirmPassword}
+            helperText={errors.confirmPassword?.message}
+          ></TextField>
+        </div>
+
         <p className="redirect">
-          Não possui uma conta?{" "}
+          Já possui uma conta?{" "}
           <span>
-            <Link to="/register">Se cadastre!</Link>
+            <Link to="/login">Entre!</Link>
           </span>
         </p>
 
-        {error && <p className="error"> Usuário ou senha incorretas! </p>}
+        {error && <p className="error"> Usuário já existe! </p>}
 
         <div className="button-container">
           <Button
@@ -100,4 +152,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

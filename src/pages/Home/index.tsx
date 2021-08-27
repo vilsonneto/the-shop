@@ -12,7 +12,7 @@ interface IItem {
   id: number;
 }
 
-function Home() {
+const Home = () => {
   const { addCart } = useCart();
 
   const [products, setProducts] = useState<IItem[]>([]);
@@ -50,6 +50,6 @@ function Home() {
       )}
     </Container>
   );
-}
+};
 
 export default Home;

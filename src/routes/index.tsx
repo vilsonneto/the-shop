@@ -2,6 +2,7 @@ import { Switch } from "react-router-dom";
 import Home from "../pages/Home";
 // import Cart from "../pages/Cart";
 import Login from "../pages/Login";
+import Register from "../pages/Register";
 // import Dashboard from "../pages/Dashboard";
 import Route from "./route";
 
@@ -10,6 +11,7 @@ const Routes = () => {
     <Switch>
       <Route path="/" exact component={Home} />
       {/* <Route path="/cart" component={Cart} /> */}
+      <Route path="/register" component={Register} />
       <Route path="/login" component={Login} />
       {/* <Route path="/dashboard" component={Dashboard} isPrivate /> */}
     </Switch>

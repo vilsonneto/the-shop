@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function PrimarySearchAppBar() {
+export const Header = () => {
   const classes = useStyles();
 
   const { token } = useAuth();
@@ -77,4 +77,4 @@ export default function PrimarySearchAppBar() {
       </Toolbar>
     </AppBar>
   );
-}
+};
