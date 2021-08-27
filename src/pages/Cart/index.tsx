@@ -105,7 +105,7 @@ function Cart() {
 
             <CardContainer>
               <h4>{cart.length} Produtos</h4>
-              <h4>{subtotal}</h4>
+              <h4>R$ {subtotal}</h4>
             </CardContainer>
           </CardContent>
           <CardActions className={classes.pos}>
